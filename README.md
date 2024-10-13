@@ -1,1 +1,1 @@
-# A 2D game made in java inspired by Dragon Ball
+# A 2D game made in Java inspired by Dragon Ball
