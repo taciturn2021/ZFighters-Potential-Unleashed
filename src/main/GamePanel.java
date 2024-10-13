@@ -82,12 +82,16 @@ public class GamePanel extends JPanel implements Runnable {
     //Update information e.g. Character position
     public void update(){
         if(keyH.upPressed == true){
+            if (playerY - playerSpeed < 0) return; // Check if the player is at the top of the screen
             playerY -= playerSpeed; // Move the player up
-        }else if (keyH.downPressed == true){
+        }if (keyH.downPressed == true){
+            if (playerY + playerSpeed >= screenHeight - tileSize) return; // Check if the player is at the bottom of the screen
             playerY += playerSpeed; // Move the player down
-        }else if (keyH.leftPressed == true){
+        }if (keyH.leftPressed == true){
+            if (playerX - playerSpeed < 0) return; // Check if the player is at the left of the screen
             playerX -= playerSpeed; // Move the player left
-        }else if (keyH.rightPressed == true){
+        }if (keyH.rightPressed == true){
+            if (playerX + playerSpeed >= screenWidth - tileSize) return; // Check if the player is at the right of the screen
             playerX += playerSpeed; // Move the player right
         }
     }
