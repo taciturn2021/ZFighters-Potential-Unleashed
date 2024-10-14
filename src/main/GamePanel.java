@@ -1,5 +1,7 @@
 package main;
 
+import entity.Player;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,7 +22,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     KeyHandler keyH = new KeyHandler(); // KeyHandler object to handle keyboard inputs
     Thread gameThread; // Game Thread (Thread is used to create Time in the game, like a clock i.e. the game runs in sync with real time)
-
+    Player player = new Player(this, keyH); // Create a Player object
     // Set player default position
     int playerX = 100; // Player X position
     int playerY = 100; // Player Y position
@@ -81,19 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     //Update information e.g. Character position
     public void update(){
-        if(keyH.upPressed == true){
-            if (playerY - playerSpeed < 0) return; // Check if the player is at the top of the screen
-            playerY -= playerSpeed; // Move the player up
-        }if (keyH.downPressed == true){
-            if (playerY + playerSpeed >= screenHeight - tileSize) return; // Check if the player is at the bottom of the screen
-            playerY += playerSpeed; // Move the player down
-        }if (keyH.leftPressed == true){
-            if (playerX - playerSpeed < 0) return; // Check if the player is at the left of the screen
-            playerX -= playerSpeed; // Move the player left
-        }if (keyH.rightPressed == true){
-            if (playerX + playerSpeed >= screenWidth - tileSize) return; // Check if the player is at the right of the screen
-            playerX += playerSpeed; // Move the player right
-        }
+        player.update(); // Update the player position
     }
 
     // Draw the screen with updated information ie Render the game
@@ -102,9 +92,19 @@ public class GamePanel extends JPanel implements Runnable {
 
         Graphics2D g2 = (Graphics2D) g; // Cast Graphics to Graphics2D for more advanced rendering
 
-        g2.setColor(Color.WHITE);  // Set the color to white
-        g2.fillRect(playerX, playerY, tileSize, tileSize); // Draws a rectangle on the screen and fills with specified color (Draw a white square acting as the player)
-
+        player.draw(g2); // Draw the player
         g2.dispose(); // Release system resources
+    }
+
+    public int getTileSize() {
+        return tileSize;
+    }
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
+
+    public int getScreenHeight() {
+        return screenHeight;
     }
 }
