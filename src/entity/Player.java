@@ -28,30 +28,30 @@ public class Player extends Entity{
     // Load the player images
     public void getPlayerImage(){
         try{
-            idleup1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idleup1.png"));
-            idleup2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idleup2.png"));
-            idledown1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idledown1.png"));
-            idledown2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idledown2.png"));
-            idleleft1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idleleft1.png"));
-            idleleft2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idleleft2.png"));
-            idleright1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idleright1.png"));
-            idleright2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/idle/idleright2.png"));
-            up1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkup-1.png"));
-            up2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkup-2.png"));
-            up3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkup-3.png"));
-            up4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkup-4.png"));
-            down1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkdown-1.png"));
-            down2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkdown-2.png"));
-            down3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkdown-3.png"));
-            down4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkdown-4.png"));
-            left1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkleft-1.png"));
-            left2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkleft-2.png"));
-            left3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkleft-3.png"));
-            left4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkleft-4.png"));
-            right1 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkright-1.png"));
-            right2 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkright-2.png"));
-            right3 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkright-3.png"));
-            right4 = ImageIO.read(getClass().getClassLoader().getResourceAsStream("player/walk/walkright-4.png"));
+            idleup1 = gp.loadImage("player/idle/idleup1.png");
+            idleup2 = gp.loadImage("player/idle/idleup2.png");
+            idledown1 = gp.loadImage("player/idle/idledown1.png");
+            idledown2 = gp.loadImage("player/idle/idledown2.png");
+            idleleft1 = gp.loadImage("player/idle/idleleft1.png");
+            idleleft2 = gp.loadImage("player/idle/idleleft2.png");
+            idleright1 = gp.loadImage("player/idle/idleright1.png");
+            idleright2 = gp.loadImage("player/idle/idleright2.png");
+            up1 = gp.loadImage("player/walk/walkup-1.png");
+            up2 = gp.loadImage("player/walk/walkup-2.png");
+            up3 = gp.loadImage("player/walk/walkup-3.png");
+            up4 = gp.loadImage("player/walk/walkup-4.png");
+            down1 = gp.loadImage("player/walk/walkdown-1.png");
+            down2 = gp.loadImage("player/walk/walkdown-2.png");
+            down3 = gp.loadImage("player/walk/walkdown-3.png");
+            down4 = gp.loadImage("player/walk/walkdown-4.png");
+            left1 = gp.loadImage("player/walk/walkleft-1.png");
+            left2 = gp.loadImage("player/walk/walkleft-2.png");
+            left3 = gp.loadImage("player/walk/walkleft-3.png");
+            left4 = gp.loadImage("player/walk/walkleft-4.png");
+            right1 = gp.loadImage("player/walk/walkright-1.png");
+            right2 = gp.loadImage("player/walk/walkright-2.png");
+            right3 = gp.loadImage("player/walk/walkright-3.png");
+            right4 = gp.loadImage("player/walk/walkright-4.png");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -160,27 +160,30 @@ public class Player extends Entity{
         }
         return image;
     }
+    public void move(){
+        if(keyH.upPressed == true){
+            direction = "up"; // Set the direction to up
+            if (y - speed < 0) return; // Check if the player is at the top of the screen
+            y -= speed; // Move the player up
+        }else if (keyH.downPressed == true){
+            direction = "down"; // Set the direction to down
+            if (y + speed >= gp.getScreenHeight() - gp.getTileSize()) return; // Check if the player is at the bottom of the screen
+            y += speed; // Move the player down
+        }else if (keyH.leftPressed == true){
+            direction = "left"; // Set the direction to left
+            if (x - speed < 0) return; // Check if the player is at the left of the screen
+            x -= speed; // Move the player left
+        }else if (keyH.rightPressed == true){
+            direction = "right"; // Set the direction to right
+            if (x + speed >= gp.getScreenWidth() - gp.getTileSize()) return; // Check if the player is at the right of the screen
+            x += speed; // Move the player right
+        }
+    }
 
     public void update(){
         setMovement(); // Check if the player is moving
         if(isMoving){
-            if(keyH.upPressed == true){
-                direction = "up"; // Set the direction to up
-                if (y - speed < 0) return; // Check if the player is at the top of the screen
-                y -= speed; // Move the player up
-            }else if (keyH.downPressed == true){
-                direction = "down"; // Set the direction to down
-                if (y + speed >= gp.getScreenHeight() - gp.getTileSize()) return; // Check if the player is at the bottom of the screen
-                y += speed; // Move the player down
-            }else if (keyH.leftPressed == true){
-                direction = "left"; // Set the direction to left
-                if (x - speed < 0) return; // Check if the player is at the left of the screen
-                x -= speed; // Move the player left
-            }else if (keyH.rightPressed == true){
-                direction = "right"; // Set the direction to right
-                if (x + speed >= gp.getScreenWidth() - gp.getTileSize()) return; // Check if the player is at the right of the screen
-                x += speed; // Move the player right
-            }
+            move(); // Move the player
             walkSpriteCounter++; // Increment the spriteCounter
             if (walkSpriteCounter >= 10){ // Check if the spriteCounter is greater than 10
                 if(walkSpriteNum == 1){

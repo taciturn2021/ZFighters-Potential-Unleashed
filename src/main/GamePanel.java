@@ -1,32 +1,32 @@
 package main;
 
 import entity.Player;
+import tile.TileManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class GamePanel extends JPanel implements Runnable {
 
     //SCREEN SETTINGS
-    final int originalTileSize = 16; // 16x16 Tile
-    final int scaling = 3; // 3x scaling
+    private final int originalTileSize = 16; // 16x16 Tile
+    private final int scaling = 3; // 3x scaling
 
-    final int tileSize = originalTileSize * scaling; // 48x48 Tile
-    final int maxScreenCol = 16; // 16 Tiles Horizontal
-    final int maxScreenRow = 12; // 12 Tiles Vertical
-    final int screenWidth = tileSize * maxScreenCol; // 768px
-    final int screenHeight = tileSize * maxScreenRow; // 576px
-
+    private final int tileSize = originalTileSize * scaling; // 48x48 Tile
+    private final int maxScreenCol = 16; // 16 Tiles Horizontal
+    private final int maxScreenRow = 12; // 12 Tiles Vertical
+    private final int screenWidth = tileSize * maxScreenCol; // 768px
+    private final int screenHeight = tileSize * maxScreenRow; // 576px
     // FPS SETTINGS
-    final int FPS = 60; // Frames per second
+    private final int FPS = 60; // Frames per second
 
-    KeyHandler keyH = new KeyHandler(); // KeyHandler object to handle keyboard inputs
-    Thread gameThread; // Game Thread (Thread is used to create Time in the game, like a clock i.e. the game runs in sync with real time)
-    Player player = new Player(this, keyH); // Create a Player object
-    // Set player default position
-    int playerX = 100; // Player X position
-    int playerY = 100; // Player Y position
-    int playerSpeed = 4; // The speed at which the player moves
+    private KeyHandler keyH = new KeyHandler(); // KeyHandler object to handle keyboard inputs
+    private Thread gameThread; // Game Thread (Thread is used to create Time in the game, like a clock i.e. the game runs in sync with real time)
+    private Player player = new Player(this, keyH); // Create a Player object
+    private TileManager tm = new TileManager(this); // Create a TileManager object
 
 
     public GamePanel(){
@@ -84,15 +84,18 @@ public class GamePanel extends JPanel implements Runnable {
     //Update information e.g. Character position
     public void update(){
         player.update(); // Update the player position
+
     }
 
     // Draw the screen with updated information ie Render the game
     public void paintComponent(Graphics g){
-        super.paintComponent(g);
-
+        super.paintComponent(g); // Call the paintComponent method of the parent class
         Graphics2D g2 = (Graphics2D) g; // Cast Graphics to Graphics2D for more advanced rendering
 
+        // Draw tiles before the player to make the player appear on top of the tiles
+        tm.drawTiles(g2); // Draw the tiles
         player.draw(g2); // Draw the player
+
         g2.dispose(); // Release system resources
     }
 
@@ -106,5 +109,21 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getScreenHeight() {
         return screenHeight;
+    }
+
+    public int getMaxScreenCol() {
+        return maxScreenCol;
+    }
+
+    public int getMaxScreenRow() {
+        return maxScreenRow;
+    }
+    public BufferedImage loadImage(String path) {
+        try {
+            return ImageIO.read(getClass().getClassLoader().getResource(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
