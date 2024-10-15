@@ -12,7 +12,7 @@ public class Player extends Entity{
     KeyHandler keyH;
     private boolean isFlying; // Check if the player is flying
     private final int screenX, screenY; // Position of player on the screen
-
+    private BufferedImage flyup1, flyup2, flyup3, flydown1, flydown2, flydown3, flyleft1, flyleft2, flyleft3, flyright1, flyright2, flyright3; // Entity Images for flying in each direction
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
         this.keyH = keyH;
@@ -58,6 +58,18 @@ public class Player extends Entity{
             right2 = gp.loadImage("player/walk/walkright-2.png");
             right3 = gp.loadImage("player/walk/walkright-3.png");
             right4 = gp.loadImage("player/walk/walkright-4.png");
+            flyup1 = gp.loadImage("player/fly/flyup-1.png");
+            flyup2 = gp.loadImage("player/fly/flyup-2.png");
+            flyup3 = gp.loadImage("player/fly/flyup-3.png");
+            flydown1 = gp.loadImage("player/fly/flydown-1.png");
+            flydown2 = gp.loadImage("player/fly/flydown-2.png");
+            flydown3 = gp.loadImage("player/fly/flydown-3.png");
+            flyleft1 = gp.loadImage("player/fly/flyleft-1.png");
+            flyleft2 = gp.loadImage("player/fly/flyleft-2.png");
+            flyleft3 = gp.loadImage("player/fly/flyleft-3.png");
+            flyright1 = gp.loadImage("player/fly/flyright-1.png");
+            flyright2 = gp.loadImage("player/fly/flyright-2.png");
+            flyright3 = gp.loadImage("player/fly/flyright-3.png");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -120,69 +132,69 @@ public class Player extends Entity{
         switch (direction){
             case "up":
                 if(walkSpriteNum == 1){
-                    if (isFlying) image = idleup1;
+                    if (isFlying) image = flyup1;
                     else image = up1;
                 }else if(walkSpriteNum == 2) {
-                    if(isFlying) image = idleup2;
+                    if(isFlying) image = flyup2;
                     else image = up2;
                 }
                 else if(walkSpriteNum == 3) {
-                    if(isFlying) image = idleup1;
+                    if(isFlying) image = flyup2;
                     else image = up3;
                 }
                 else if(walkSpriteNum == 4) {
-                    if(isFlying) image = idleup2;
+                    if(isFlying) image = flyup3;
                     else image = up4;
                 }
                 break;
             case "down":
                 if(walkSpriteNum == 1){
-                    if(isFlying) image = idledown1;
+                    if(isFlying) image = flydown1;
                     else image = down1;
                 }else if(walkSpriteNum == 2) {
-                    if (isFlying) image = idledown2;
+                    if (isFlying) image = flydown2;
                     else image = down2;
                 }
                 else if(walkSpriteNum == 3) {
-                    if (isFlying) image = idledown1;
+                    if (isFlying) image = flydown2;
                     else image = down3;
                 }
                 else if(walkSpriteNum == 4) {
-                    if(isFlying) image = idledown2;
+                    if(isFlying) image = flydown3;
                     else image = down4;
                 }
                 break;
             case "left":
                 if(walkSpriteNum == 1){
-                    if(isFlying) image = idleleft1;
+                    if(isFlying) image = flyleft1;
                     else image = left1;
                 }else if(walkSpriteNum == 2) {
-                    if(isFlying) image = idleleft2;
+                    if(isFlying) image = flyleft2;
                     else image = left2;
                 }
                 else if(walkSpriteNum == 3) {
-                    if(isFlying) image = idleleft1;
+                    if(isFlying) image = flyleft2;
                     else image = left3;
                 }
                 else if(walkSpriteNum == 4) {
-                    if(isFlying) image = idleleft2;
+                    if(isFlying) image = flyleft3;
                     else image = left4;
                 }
                 break;
             case "right":
                 if(walkSpriteNum == 1){
-                    if(isFlying) image = idleright1;
+                    if(isFlying) image = flyright1;
                     else image = right1;
                 }else if(walkSpriteNum == 2) {
-                    if(isFlying) image = idleright2;
+                    if(isFlying) image = flyright2;
                     else image = right2;
                 }
                 else if(walkSpriteNum == 3) {
-                    if(isFlying) image = idleright1;
+                    if(isFlying) image = flyright2;
                     else image = right3;
                 }
                 else if(walkSpriteNum == 4) {
-                    if(isFlying) image = idleright2;
+                    if(isFlying) image = flyright3;
                     else image = right4;
                 }
                 break;
@@ -190,10 +202,7 @@ public class Player extends Entity{
         return image;
     }
 
-    public BufferedImage flying(){
-        BufferedImage image = null;
-        return image;
-    }
+
     public void move(){
         if(keyH.upPressed == true){
             direction = "up"; // Set the direction to up
@@ -260,7 +269,10 @@ public class Player extends Entity{
         BufferedImage image = null; // Get the idle image based on the direction
         if(!isMoving) image = idle(); // Get the idle image based on the direction
         if (isMoving) image = walking(); // Get the walking image based on the direction
-//        if (isMoving && isFlying) image = flying(); // Get the flying image based on the direction
+        if (isMoving && isFlying) {
+            g2.drawImage(image, screenX, screenY, gp.getTileSize()+(gp.getTileSize()/2), gp.getTileSize()+(gp.getTileSize()/2), null);
+            return;
+        }
         g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null); // Draw the player
     }
 
