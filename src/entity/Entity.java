@@ -3,7 +3,7 @@ package entity;
 import java.awt.image.BufferedImage;
 
 public class Entity {
-    protected int x, y;
+    protected int worldX, worldY; // Position of entity in the world
     protected int speed;
 
     protected BufferedImage idleup1, idleup2, idledown1, idledown2, idleleft1, idleleft2, idleright1, idleright2; // Entity Images for standing still in each direction
@@ -14,4 +14,12 @@ public class Entity {
     protected int idleSpriteNum = 1; // Number to determine which idle sprite to display
     protected int walkSpriteCounter = 0; // Counter to switch between walk sprites
     protected int walkSpriteNum = 1; // Number to determine which walk sprite to display
+
+    public int getWorldX() {
+        return worldX;
+    }
+
+    public int getWorldY() {
+        return worldY;
+    }
 }

@@ -22,6 +22,12 @@ public class GamePanel extends JPanel implements Runnable {
     private final int screenHeight = tileSize * maxScreenRow; // 576px
     // FPS SETTINGS
     private final int FPS = 60; // Frames per second
+    // WORLD SETTINGS
+    private final int maxWorldCol = 50; // 40 Tiles Horizontal
+    private final int maxWorldRow = 50; // 30 Tiles Vertical
+    private final int worldWidth = tileSize * maxWorldCol;
+    private final int worldHeight = tileSize * maxWorldRow;
+
 
     private KeyHandler keyH = new KeyHandler(); // KeyHandler object to handle keyboard inputs
     private Thread gameThread; // Game Thread (Thread is used to create Time in the game, like a clock i.e. the game runs in sync with real time)
@@ -118,6 +124,27 @@ public class GamePanel extends JPanel implements Runnable {
     public int getMaxScreenRow() {
         return maxScreenRow;
     }
+
+    public int getMaxWorldCol() {
+        return maxWorldCol;
+    }
+
+    public int getMaxWorldRow() {
+        return maxWorldRow;
+    }
+
+    public int getWorldWidth() {
+        return worldWidth;
+    }
+
+    public int getWorldHeight() {
+        return worldHeight;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
     public BufferedImage loadImage(String path) {
         try {
             return ImageIO.read(getClass().getClassLoader().getResource(path));

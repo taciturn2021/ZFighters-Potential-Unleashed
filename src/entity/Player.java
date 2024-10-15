@@ -11,16 +11,21 @@ public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
 
+    private final int screenX, screenY; // Position of player on the screen
+
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
         this.keyH = keyH;
+
+        screenX = gp.getScreenWidth() / 2 - (gp.getTileSize()/2); // Player is centered on the screen
+        screenY = gp.getScreenHeight() / 2 - (gp.getTileSize()/2);
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues(){
-        x = 100;
-        y = 100;
+        worldX = gp.getTileSize() * 23; // Set the player's initial world X position
+        worldY = gp.getTileSize() * 21; // Set the player's initial world Y position
         speed = 4;
         direction = "down";
         isMoving = false;
@@ -163,25 +168,21 @@ public class Player extends Entity{
     public void move(){
         if(keyH.upPressed == true){
             direction = "up"; // Set the direction to up
-            if (y - speed < 0) return; // Check if the player is at the top of the screen
-            y -= speed; // Move the player up
+            worldY -= speed; // Move the player up
         }else if (keyH.downPressed == true){
             direction = "down"; // Set the direction to down
-            if (y + speed >= gp.getScreenHeight() - gp.getTileSize()) return; // Check if the player is at the bottom of the screen
-            y += speed; // Move the player down
+            worldY += speed; // Move the player down
         }else if (keyH.leftPressed == true){
             direction = "left"; // Set the direction to left
-            if (x - speed < 0) return; // Check if the player is at the left of the screen
-            x -= speed; // Move the player left
+            worldX -= speed; // Move the player left
         }else if (keyH.rightPressed == true){
             direction = "right"; // Set the direction to right
-            if (x + speed >= gp.getScreenWidth() - gp.getTileSize()) return; // Check if the player is at the right of the screen
-            x += speed; // Move the player right
+            worldX += speed; // Move the player right
         }
     }
 
     public void update(){
-        setMovement(); // Check if the player is moving
+        setMovement(); // Check if the player is moving (to switch between idle and walking animations)
         if(isMoving){
             move(); // Move the player
             walkSpriteCounter++; // Increment the spriteCounter
@@ -214,11 +215,19 @@ public class Player extends Entity{
         }
     }
 
+    public int getScreenX() {
+        return screenX;
+    }
+
+    public int getScreenY() {
+        return screenY;
+    }
+
     public void draw(Graphics2D g2) {
         BufferedImage image = null; // Get the idle image based on the direction
         if(!isMoving) image = idle(); // Get the idle image based on the direction
         if (isMoving) image = walking(); // Get the walking image based on the direction
-        g2.drawImage(image, x, y, gp.getTileSize(), gp.getTileSize(), null); // Draw the player
+        g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null); // Draw the player
     }
 
 
