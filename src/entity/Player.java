@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
-
+    private boolean isFlying; // Check if the player is flying
     private final int screenX, screenY; // Position of player on the screen
 
     public Player(GamePanel gp, KeyHandler keyH){
@@ -29,6 +29,7 @@ public class Player extends Entity{
         speed = 4;
         direction = "down";
         isMoving = false;
+        isFlying = false;
     }
     // Load the player images
     public void getPlayerImage(){
@@ -69,6 +70,13 @@ public class Player extends Entity{
             isMoving = false;
         }
     }
+    public void setFlying() {
+        if (keyH.flyPressed) {
+            isFlying = true;
+        } else {
+            isFlying = false;
+        }
+    }
 
     // Set the idle image based on the direction
     public BufferedImage idle(){
@@ -106,63 +114,84 @@ public class Player extends Entity{
 
         return image;
     }
-    // Set the walking image based on the direction
+    // Set the walking or flying image based on the direction
     public BufferedImage walking(){
         BufferedImage image = null;
         switch (direction){
             case "up":
                 if(walkSpriteNum == 1){
-                    image = up1;
+                    if (isFlying) image = idleup1;
+                    else image = up1;
                 }else if(walkSpriteNum == 2) {
-                    image = up2;
+                    if(isFlying) image = idleup2;
+                    else image = up2;
                 }
                 else if(walkSpriteNum == 3) {
-                    image = up3;
+                    if(isFlying) image = idleup1;
+                    else image = up3;
                 }
                 else if(walkSpriteNum == 4) {
-                    image = up4;
+                    if(isFlying) image = idleup2;
+                    else image = up4;
                 }
                 break;
             case "down":
                 if(walkSpriteNum == 1){
-                    image = down1;
+                    if(isFlying) image = idledown1;
+                    else image = down1;
                 }else if(walkSpriteNum == 2) {
-                    image = down2;
+                    if (isFlying) image = idledown2;
+                    else image = down2;
                 }
                 else if(walkSpriteNum == 3) {
-                    image = down3;
+                    if (isFlying) image = idledown1;
+                    else image = down3;
                 }
                 else if(walkSpriteNum == 4) {
-                    image = down4;
+                    if(isFlying) image = idledown2;
+                    else image = down4;
                 }
                 break;
             case "left":
                 if(walkSpriteNum == 1){
-                    image = left1;
+                    if(isFlying) image = idleleft1;
+                    else image = left1;
                 }else if(walkSpriteNum == 2) {
-                    image = left2;
+                    if(isFlying) image = idleleft2;
+                    else image = left2;
                 }
                 else if(walkSpriteNum == 3) {
-                    image = left3;
+                    if(isFlying) image = idleleft1;
+                    else image = left3;
                 }
                 else if(walkSpriteNum == 4) {
-                    image = left4;
+                    if(isFlying) image = idleleft2;
+                    else image = left4;
                 }
                 break;
             case "right":
                 if(walkSpriteNum == 1){
-                    image = right1;
+                    if(isFlying) image = idleright1;
+                    else image = right1;
                 }else if(walkSpriteNum == 2) {
-                    image = right2;
+                    if(isFlying) image = idleright2;
+                    else image = right2;
                 }
                 else if(walkSpriteNum == 3) {
-                    image = right3;
+                    if(isFlying) image = idleright1;
+                    else image = right3;
                 }
                 else if(walkSpriteNum == 4) {
-                    image = right4;
+                    if(isFlying) image = idleright2;
+                    else image = right4;
                 }
                 break;
         }
+        return image;
+    }
+
+    public BufferedImage flying(){
+        BufferedImage image = null;
         return image;
     }
     public void move(){
@@ -183,7 +212,11 @@ public class Player extends Entity{
 
     public void update(){
         setMovement(); // Check if the player is moving (to switch between idle and walking animations)
+        setFlying(); // Check if the player is flying
         if(isMoving){
+            if (!isFlying) speed = 4; // Set the speed to 4 if the player is not flying
+            else speed = 8; // Set the speed to 8 if the player is flying
+
             move(); // Move the player
             walkSpriteCounter++; // Increment the spriteCounter
             if (walkSpriteCounter >= 10){ // Check if the spriteCounter is greater than 10
@@ -227,6 +260,7 @@ public class Player extends Entity{
         BufferedImage image = null; // Get the idle image based on the direction
         if(!isMoving) image = idle(); // Get the idle image based on the direction
         if (isMoving) image = walking(); // Get the walking image based on the direction
+//        if (isMoving && isFlying) image = flying(); // Get the flying image based on the direction
         g2.drawImage(image, screenX, screenY, gp.getTileSize(), gp.getTileSize(), null); // Draw the player
     }
 
