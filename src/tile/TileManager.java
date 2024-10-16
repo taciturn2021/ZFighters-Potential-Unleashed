@@ -3,37 +3,35 @@ package tile;
 import main.GamePanel;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 public class TileManager {
     GamePanel gp;
     Tile[] tile; // Array of tiles
     int mapTiles[][]; // 2D array to store the map tiles
-
+    BufferedImage planetNamek; // Image of the planet Namek
     public TileManager(GamePanel gp) {
         this.gp = gp;
-        tile = new Tile[10];
+        tile = new Tile[4096];
         mapTiles = new int[gp.getMaxWorldRow()][gp.getMaxWorldCol()];
         // Initialize the tile array
         for (int i = 0; i < tile.length; i++) {
             tile[i] = new Tile();
         }
+        planetNamek = gp.loadImage("tiles/NamekOuter.png"); // Load the planet Namek image
         getTileImage(); // Load the tile images
-        loadMap("maps/world01.txt"); // Load the map
+        loadMap("maps/NamekOuter.csv"); // Load the map
     }
 
-    // Load the tile images and set the collision
+    // Divide the map image into sub images and store them in the tile array
     public void getTileImage() {
         try {
-            tile[0].setImage(gp.loadImage("tiles/grass.png"));
-            tile[1].setImage(gp.loadImage("tiles/wall.png"));
-            tile[1].setCollision(true);
-            tile[2].setImage(gp.loadImage("tiles/water.png"));
-            tile[2].setCollision(true);
-            tile[3].setImage(gp.loadImage("tiles/earth.png"));
-            tile[4].setImage(gp.loadImage("tiles/tree.png"));
-            tile[4].setCollision(true);
-            tile[5].setImage(gp.loadImage("tiles/sand.png"));
+            for (int i = 0; i < 4096 ; i++) {
+                int row = i / 64;
+                int col = i % 64;
+                tile[i].setImage(planetNamek.getSubimage(col * gp.getOriginalTileSize(), row * gp.getOriginalTileSize(), gp.getOriginalTileSize(), gp.getOriginalTileSize()));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,7 +44,7 @@ public class TileManager {
             BufferedReader br = new BufferedReader(new InputStreamReader(fr));
             for (int row = 0; row < gp.getMaxWorldRow(); row++) {
                 String line = br.readLine();
-                String[] tokens = line.split(" ");
+                String[] tokens = line.split(",");
                 for (int col = 0; col < gp.getMaxWorldCol(); col++) {
                     mapTiles[row][col] = Integer.parseInt(tokens[col]);
                 }

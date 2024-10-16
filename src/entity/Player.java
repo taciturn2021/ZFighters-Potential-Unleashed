@@ -27,7 +27,7 @@ public class Player extends Entity{
     }
 
     public void setDefaultValues(){
-        worldX = gp.getTileSize() * 23; // Set the player's initial world X position
+        worldX = gp.getTileSize() * 32; // Set the player's initial world X position
         worldY = gp.getTileSize() * 21; // Set the player's initial world Y position
         speed = 4;
         direction = "down";
