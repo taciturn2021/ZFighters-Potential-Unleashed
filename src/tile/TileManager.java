@@ -20,18 +20,34 @@ public class TileManager {
             tile[i] = new Tile();
         }
         planetNamek = gp.loadImage("tiles/NamekOuter.png"); // Load the planet Namek image
-        getTileImage(); // Load the tile images
-        loadMap("maps/NamekOuter.csv"); // Load the map
+        getTileImageNamek(); // Load the tile images
+        getTileImagesPH();
+        loadMap("maps/world01.txt"); // Load the map
     }
 
     // Divide the map image into sub images and store them in the tile array
-    public void getTileImage() {
+    public void getTileImageNamek() {
         try {
             for (int i = 0; i < 4096 ; i++) {
                 int row = i / 64;
                 int col = i % 64;
                 tile[i].setImage(planetNamek.getSubimage(col * gp.getOriginalTileSize(), row * gp.getOriginalTileSize(), gp.getOriginalTileSize(), gp.getOriginalTileSize()));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void getTileImagesPH() {
+        try {
+            tile[0].setImage(gp.loadImage("tiles/placeholder/grass.png"));
+            tile[1].setImage(gp.loadImage("tiles/placeholder/wall.png"));
+            tile[1].setCollision(true);
+            tile[2].setImage(gp.loadImage("tiles/placeholder/water.png"));
+            tile[2].setCollision(true);
+            tile[3].setImage(gp.loadImage("tiles/placeholder/earth.png"));
+            tile[4].setImage(gp.loadImage("tiles/placeholder/tree.png"));
+            tile[4].setCollision(true);
+            tile[5].setImage(gp.loadImage("tiles/placeholder/sand.png"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,6 +60,7 @@ public class TileManager {
             BufferedReader br = new BufferedReader(new InputStreamReader(fr));
             for (int row = 0; row < gp.getMaxWorldRow(); row++) {
                 String line = br.readLine();
+                line = line.replace(" ", ",");
                 String[] tokens = line.split(",");
                 for (int col = 0; col < gp.getMaxWorldCol(); col++) {
                     mapTiles[row][col] = Integer.parseInt(tokens[col]);
