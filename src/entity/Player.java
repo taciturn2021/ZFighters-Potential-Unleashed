@@ -16,9 +16,12 @@ public class Player extends Entity{
     public Player(GamePanel gp, KeyHandler keyH){
         this.gp = gp;
         this.keyH = keyH;
-
-        screenX = gp.getScreenWidth() / 2 - (gp.getTileSize()/2); // Player is centered on the screen
+        // Center the player on the screen
+        screenX = gp.getScreenWidth() / 2 - (gp.getTileSize()/2);
         screenY = gp.getScreenHeight() / 2 - (gp.getTileSize()/2);
+        // Create a new rectangle for collision detection
+        solidArea = new Rectangle(8,16,16,20);
+        // Set the player's initial values and load images
         setDefaultValues();
         getPlayerImage();
     }
@@ -83,6 +86,7 @@ public class Player extends Entity{
         }
     }
     public void setFlying() {
+        keyH.setCollisionOn(collisionOn);
         if (keyH.flyPressed) {
             isFlying = true;
         } else {
@@ -96,37 +100,45 @@ public class Player extends Entity{
             switch (direction){
                 case "up":
                     if(idleSpriteNum == 1){
-                        image = idleup1;
+                        if(isFlying) image = flyup1;
+                        else image = idleup1;
                     }else if(idleSpriteNum == 2) {
-                        image = idleup2;
+                        if(isFlying) image = flyup2;
+                        else image = idleup2;
                     }
                     break;
                 case "down":
                     if(idleSpriteNum == 1){
-                        image = idledown1;
+                        if(isFlying) image = flydown1;
+                        else image = idledown1;
                     }else if(idleSpriteNum == 2) {
-                        image = idledown2;
+                        if(isFlying) image = flydown2;
+                        else image = idledown2;
                     }
                     break;
                 case "left":
                     if(idleSpriteNum == 1){
-                        image = idleleft1;
+                        if(isFlying) image = flyleft1;
+                        else image = idleleft1;
                     }else if(idleSpriteNum == 2) {
-                        image = idleleft2;
+                        if(isFlying) image = flyleft2;
+                        else image = idleleft2;
                     }
                     break;
                 case "right":
                     if(idleSpriteNum == 1){
-                        image = idleright1;
+                        if(isFlying) image = flyright1;
+                        else image = idleright1;
                     }else if(idleSpriteNum == 2) {
-                        image = idleright2;
+                        if(isFlying) image = flyright2;
+                        else image = idleright2;
                     }
                     break;
             }
 
         return image;
     }
-    // Set the walking or flying image based on the direction
+    // Set the moving image based on the direction
     public BufferedImage walking(){
         BufferedImage image = null;
         switch (direction){
@@ -202,20 +214,33 @@ public class Player extends Entity{
         return image;
     }
 
-
-    public void move(){
+    // Check the direction the player is facing
+    public void checkDirection(){
         if(keyH.upPressed == true){
             direction = "up"; // Set the direction to up
-            worldY -= speed; // Move the player up
         }else if (keyH.downPressed == true){
             direction = "down"; // Set the direction to down
-            worldY += speed; // Move the player down
         }else if (keyH.leftPressed == true){
             direction = "left"; // Set the direction to left
-            worldX -= speed; // Move the player left
         }else if (keyH.rightPressed == true){
             direction = "right"; // Set the direction to right
-            worldX += speed; // Move the player right
+        }
+    }
+    // Move the player
+    public void movePlayer(){
+        switch (direction){
+            case "up":
+                worldY -= speed; // Move the player up
+                break;
+            case "down":
+                worldY += speed; // Move the player down
+                break;
+            case "left":
+                worldX -= speed; // Move the player left
+                break;
+            case "right":
+                worldX += speed; // Move the player right
+                break;
         }
     }
 
@@ -225,8 +250,12 @@ public class Player extends Entity{
         if(isMoving){
             if (!isFlying) speed = 4; // Set the speed to 4 if the player is not flying
             else speed = 8; // Set the speed to 8 if the player is flying
+            checkDirection(); // Check the direction player is facing
+            collisionOn = false; // Set collisionOn to false
+            gp.getCm().checkTile(this); // Check for collision
+            if(!collisionOn || isFlying) movePlayer(); // Move the player if there is no collision
 
-            move(); // Move the player
+            // Walking / Flying Animations
             walkSpriteCounter++; // Increment the spriteCounter
             if (walkSpriteCounter >= 10){ // Check if the spriteCounter is greater than 10
                 if(walkSpriteNum == 1){
@@ -245,6 +274,7 @@ public class Player extends Entity{
             }
         }
 
+        // Idle Animations
         idleSpriteCounter++; // Increment the spriteCounter
         if (idleSpriteCounter >= 50){ // Check if the spriteCounter is greater than 10
             if(idleSpriteNum == 1){
@@ -269,7 +299,7 @@ public class Player extends Entity{
         BufferedImage image = null; // Get the idle image based on the direction
         if(!isMoving) image = idle(); // Get the idle image based on the direction
         if (isMoving) image = walking(); // Get the walking image based on the direction
-        if (isMoving && isFlying) {
+        if (isFlying) {
             g2.drawImage(image, screenX, screenY, gp.getTileSize()+(gp.getTileSize()/2), gp.getTileSize()+(gp.getTileSize()/2), null);
             return;
         }

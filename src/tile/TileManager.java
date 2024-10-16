@@ -22,14 +22,17 @@ public class TileManager {
         loadMap("maps/world01.txt"); // Load the map
     }
 
-    // Load the tile images
+    // Load the tile images and set the collision
     public void getTileImage() {
         try {
             tile[0].setImage(gp.loadImage("tiles/grass.png"));
             tile[1].setImage(gp.loadImage("tiles/wall.png"));
+            tile[1].setCollision(true);
             tile[2].setImage(gp.loadImage("tiles/water.png"));
+            tile[2].setCollision(true);
             tile[3].setImage(gp.loadImage("tiles/earth.png"));
             tile[4].setImage(gp.loadImage("tiles/tree.png"));
+            tile[4].setCollision(true);
             tile[5].setImage(gp.loadImage("tiles/sand.png"));
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,6 +90,32 @@ public class TileManager {
         camera(g2);
     }
 
+    // Getters and Setters
+
+
+    public GamePanel getGp() {
+        return gp;
     }
+
+    public void setGp(GamePanel gp) {
+        this.gp = gp;
+    }
+
+    public Tile[] getTile() {
+        return tile;
+    }
+
+    public void setTile(Tile[] tile) {
+        this.tile = tile;
+    }
+
+    public int[][] getMapTiles() {
+        return mapTiles;
+    }
+
+    public void setMapTiles(int[][] mapTiles) {
+        this.mapTiles = mapTiles;
+    }
+}
 
 

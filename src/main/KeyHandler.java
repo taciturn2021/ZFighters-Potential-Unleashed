@@ -1,13 +1,14 @@
 package main;
 
+import entity.Player;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener {
     public boolean upPressed, downPressed, leftPressed, rightPressed; // Boolean variables to check if the keys are pressed
     public boolean flyPressed;
-
-
+    private boolean collisionOn = false; // Boolean to check if the entity can collide with other entities
 
     @Override
     // AUTO GENERATED METHODS BY KEYLISTENER CLASS
@@ -31,7 +32,8 @@ public class KeyHandler implements KeyListener {
         if(code == KeyEvent.VK_D){
             rightPressed = true;
         }
-        if(code == KeyEvent.VK_SPACE){
+        if(code == KeyEvent.VK_SPACE){ // Check if the key pressed is SPACE and the player is on the ground
+            if(collisionOn && flyPressed) return; // if the player is on a tile with collision and flyPressed is true, return
             flyPressed = !flyPressed; // Toggle the flyPressed variable
         }
     }
@@ -54,5 +56,13 @@ public class KeyHandler implements KeyListener {
             rightPressed = false;
         }
 
+    }
+
+    public boolean isCollisionOn() {
+        return collisionOn;
+    }
+
+    public void setCollisionOn(boolean collisionOn) {
+        this.collisionOn = collisionOn;
     }
 }

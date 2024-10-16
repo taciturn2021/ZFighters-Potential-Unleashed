@@ -33,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread gameThread; // Game Thread (Thread is used to create Time in the game, like a clock i.e. the game runs in sync with real time)
     private Player player = new Player(this, keyH); // Create a Player object
     private TileManager tm = new TileManager(this); // Create a TileManager object
-
+    private CollisionManager cm = new CollisionManager(this); // Create a CollisionManager object
 
     public GamePanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -104,6 +104,16 @@ public class GamePanel extends JPanel implements Runnable {
 
         g2.dispose(); // Release system resources
     }
+    public BufferedImage loadImage(String path) {
+        try {
+            return ImageIO.read(getClass().getClassLoader().getResource(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // Getters and Setters
 
     public int getTileSize() {
         return tileSize;
@@ -145,12 +155,51 @@ public class GamePanel extends JPanel implements Runnable {
         return player;
     }
 
-    public BufferedImage loadImage(String path) {
-        try {
-            return ImageIO.read(getClass().getClassLoader().getResource(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public CollisionManager getCm() {
+        return cm;
+    }
+
+    public int getScaling() {
+        return scaling;
+    }
+
+    public int getOriginalTileSize() {
+        return originalTileSize;
+    }
+
+    public int getFPS() {
+        return FPS;
+    }
+
+    public Thread getGameThread() {
+        return gameThread;
+    }
+
+    public void setGameThread(Thread gameThread) {
+        this.gameThread = gameThread;
+    }
+
+    public KeyHandler getKeyH() {
+        return keyH;
+    }
+
+    public void setKeyH(KeyHandler keyH) {
+        this.keyH = keyH;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public TileManager getTm() {
+        return tm;
+    }
+
+    public void setTm(TileManager tm) {
+        this.tm = tm;
+    }
+
+    public void setCm(CollisionManager cm) {
+        this.cm = cm;
     }
 }

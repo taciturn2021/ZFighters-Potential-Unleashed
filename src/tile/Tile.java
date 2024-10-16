@@ -11,6 +11,18 @@ public class Tile {
     public void setImage(BufferedImage image){
         this.image = image;
     }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public boolean getCollision() {
+        return collision;
+    }
+
+    public void setCollision(boolean collision) {
+        this.collision = collision;
+    }
 }
 
 
